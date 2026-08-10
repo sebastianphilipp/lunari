@@ -32,6 +32,10 @@ file(GLOB_RECURSE SOURCES
 
 add_executable(pacman ${SOURCES})
 
+target_include_directories(pacman PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
 target_link_libraries(pacman PRIVATE
         SDL3::SDL3
         Boost::signals2

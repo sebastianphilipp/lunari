@@ -6,74 +6,60 @@
 
 using KeySignal = boost::signals2::signal<void(SDL_Keycode)>;
 
-int main() {
-    KeySignal keySignal{};
+int main()
+{
+	if (!SDL_Init(SDL_INIT_VIDEO))
+	{
+		std::cerr << "SDL_Init fehlgeschlagen: " << SDL_GetError() << '\n';
+		return 1;
+	}
 
-    Event layer_event{keySignal};
+	SDL_Window *window = SDL_CreateWindow(
+			"Pacman",
+			800,
+			600,
+			SDL_WINDOW_RESIZABLE
+	);
 
-    if (!SDL_Init(SDL_INIT_VIDEO))
-    {
-        std::cerr << "SDL_Init fehlgeschlagen: " << SDL_GetError() << '\n';
-        return 1;
-    }
+	if (!window)
+	{
+		std::cerr << "Fenster konnte nicht erstellt werden: " << SDL_GetError() << '\n';
+		SDL_Quit();
+		return 1;
+	}
 
-    SDL_Window* window = SDL_CreateWindow(
-            "Pacman",
-            800,
-            600,
-            SDL_WINDOW_RESIZABLE
-    );
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, nullptr);
 
-    if (!window)
-    {
-        std::cerr << "Fenster konnte nicht erstellt werden: " << SDL_GetError() << '\n';
-        SDL_Quit();
-        return 1;
-    }
+	if (!renderer)
+	{
+		std::cerr << SDL_GetError() << '\n';
+		SDL_DestroyWindow(window);
+		SDL_Quit();
+		return 1;
+	}
 
-    SDL_Renderer* renderer = SDL_CreateRenderer(window, nullptr);
+	KeySignal keySignal{};
 
-    if (!renderer) {
-        std::cerr << SDL_GetError() << '\n';
-        SDL_DestroyWindow(window);
-        SDL_Quit();
-        return 1;
-    }
+	Event layer_event{keySignal};
 
-    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+	SDL_Event event{};
+	bool running{true};
+	while (running)
+	{
+		while (SDL_PollEvent(&event))
+		{
+			if (event.type == SDL_EVENT_QUIT)
+			{
+				running = false;
+				break;
+			}
+			if (event.type == SDL_EVENT_KEY_DOWN)
+			{
+				keySignal(event.key.key);
+			}
+		}
+	}
 
-    SDL_FRect rect{
-
-            100.0f,
-
-            100.0f,
-
-            50.0f,
-
-            50.0f
-
-    };
-
-    SDL_RenderFillRect(renderer, &rect);
-
-    // Fertiges Bild anzeigen
-
-    SDL_RenderPresent(renderer);
-
-    SDL_Event event{};
-    bool running{true};
-    while (running) {
-        while (SDL_PollEvent(&event)) {
-            if (event.type == SDL_EVENT_QUIT) {
-                running = false;
-                break;
-            }
-            if (event.type == SDL_EVENT_KEY_DOWN) {
-                keySignal(event.key.key);
-            }
-        }
-    }
-
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+	SDL_DestroyWindow(window);
+	SDL_Quit();
 }
