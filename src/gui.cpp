@@ -4,13 +4,8 @@
 
 #include "gui.h"
 
-Gui::Gui(SDL_Renderer& renderer) : m_renderer{renderer}, m_menu{m_signal}
+Gui::Gui(Event& event, SDL_Renderer& renderer) : m_menu{event.key(), renderer}
 {}
-
-ChangeViewSignal& Gui::signal()
-{
-	return m_signal;
-}
 
 Menu& Gui::menu()
 {

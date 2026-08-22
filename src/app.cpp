@@ -4,7 +4,7 @@
 
 #include "app.h"
 
-App::App(Gui& gui) : m_manager{gui.signal(), std::vector<View*>{&gui.menu()}}
+App::App(Gui& gui) : m_manager{std::vector<View*>{&gui.menu()}}
 {}
 
 Manager& App::manager()

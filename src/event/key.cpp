@@ -5,18 +5,19 @@
 #include <boost/bind/bind.hpp>
 #include <iostream>
 
-#include "key.h"
+#include <event/key.h>
 
-Key::Key(KeySignal& keySignal) {
-    keySignal.connect(
-            boost::bind(
-                    &Key::onKeyDown,
-                    this,
-                    boost::placeholders::_1
-            )
-    );
+Key::Key(KeySignal& keySignal)
+{
+    keySignal.connect(boost::bind(&Key::onKeyDown, this, boost::placeholders::_1));
 }
 
-void Key::onKeyDown(SDL_Keycode key) {
-    std::cout << key << std::endl;
+KeySignal& Key::key()
+{
+	return m_key;
+}
+
+void Key::onKeyDown(SDL_Keycode key)
+{
+    m_key(key);
 }

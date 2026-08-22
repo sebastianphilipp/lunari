@@ -9,14 +9,13 @@
 
 #include <boost/signals2.hpp>
 #include <vector>
-#include <algorithm>
 
 using ChangeViewSignal = boost::signals2::signal<void(View::eView)>;
 
 class Manager
 {
 public:
-	Manager(ChangeViewSignal&, std::vector<View*>);
+	Manager(std::vector<View*>);
 	void render();
 
 private:

@@ -12,18 +12,18 @@
 
 #include <gui/menu.h>
 
+#include <event.h>
+
 using ChangeViewSignal = boost::signals2::signal<void(View::eView)>;
 
 class Gui
 {
 public:
-	explicit Gui(SDL_Renderer&);
+	explicit Gui(Event&, SDL_Renderer&);
 
-	ChangeViewSignal& signal();
 	Menu& menu();
-private:
-	ChangeViewSignal m_signal{};
 
+private:
 	Menu m_menu;
 };
 

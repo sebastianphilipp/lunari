@@ -6,18 +6,19 @@
 
 #include <utility>
 
-Manager::Manager(ChangeViewSignal& change, std::vector<View*> views) : m_views{std::move(views)}
+Manager::Manager(std::vector<View*> views) : m_views{std::move(views)}
 {
 	m_activeView = getView(View::eView::Main);
 	m_activeView->entry();
 
-	change.connect(
-			boost::bind(
-					&Manager::onViewChanged,
-					this,
-					boost::placeholders::_1
-			)
-	);
+	for (View* view : m_views)
+	{
+		if (!view)
+		{
+			continue;
+		}
+		view->change().connect(boost::bind(&Manager::onViewChanged, this, boost::placeholders::_1));
+	}
 }
 
 View* Manager::getView(View::eView type)

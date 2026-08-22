@@ -16,6 +16,7 @@ class Event
 {
 public:
 	explicit Event(KeySignal &keySignal);
+	Key& key();
 
 private:
 	Key m_key;

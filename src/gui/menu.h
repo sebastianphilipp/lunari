@@ -9,21 +9,27 @@
 
 #include <SDL3/SDL.h>
 
+#include <contracts/gui/keyevent.h>
+
 using ChangeViewSignal = boost::signals2::signal<void(View::eView)>;
 
 class Menu : public View
 {
 public:
-	explicit Menu(SDL_Renderer&, ChangeViewSignal&);
+	Menu(KeyEvent&, SDL_Renderer&);
 
 	void render() override;
 	void entry() override;
 	void exit() override;
 	eView type() const override;
+	ChangeViewSignal& change() override;
 
 private:
+	void onKeyDown(SDL_Keycode key);
+
+	ChangeViewSignal m_change{};
+
 	SDL_Renderer& m_renderer;
-	ChangeViewSignal& m_signal;
 };
 
 

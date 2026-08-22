@@ -8,12 +8,16 @@
 #include <boost/signals2.hpp>
 #include <SDL3/SDL.h>
 
-using KeySignal = boost::signals2::signal<void(SDL_Keycode)>;
+#include <contracts/gui/keyevent.h>
 
-class Key {
+class Key : public KeyEvent {
 public:
     explicit Key(KeySignal& keySignal);
+	KeySignal& key() override;
+
 private:
+	KeySignal m_key{};
+
     void onKeyDown(SDL_Keycode key);
 };
 

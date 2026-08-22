@@ -43,7 +43,7 @@ int main()
 	KeySignal keySignal{};
 
 	Event layer_event{keySignal};
-	Gui layer_gui{*renderer};
+	Gui layer_gui{layer_event, *renderer};
 	App layer_app{layer_gui};
 
 	/* Hauptschleife */
