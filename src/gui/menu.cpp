@@ -34,6 +34,7 @@ ChangeViewSignal& Menu::change()
 
 void Menu::onKeyDown(SDL_Keycode key)
 {
+	/* TODO(sp): Example, delete  later */
 	if (key == SDLK_P)
 	{
 		SDL_SetRenderDrawColor(&m_renderer, 0, 0, 0, 255);

@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.27)
 project(
-        pacman
+        lunari
         LANGUAGES CXX
 )
 
@@ -30,13 +30,13 @@ file(GLOB_RECURSE SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp"
 )
 
-add_executable(pacman ${SOURCES})
+add_executable(lunari ${SOURCES})
 
-target_include_directories(pacman PRIVATE
+target_include_directories(lunari PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-target_link_libraries(pacman PRIVATE
+target_link_libraries(lunari PRIVATE
         SDL3::SDL3
         Boost::signals2
 )

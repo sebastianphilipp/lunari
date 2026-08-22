@@ -8,28 +8,29 @@
 
 using KeySignal = boost::signals2::signal<void(SDL_Keycode)>;
 
-int main()
+SDL_Window* createWindow()
 {
-	if (!SDL_Init(SDL_INIT_VIDEO))
-	{
-		std::cerr << "SDL_Init fehlgeschlagen: " << SDL_GetError() << '\n';
-		return 1;
-	}
+	constexpr size_t width = 800;
+	constexpr size_t height = 600;
 
 	SDL_Window* window = SDL_CreateWindow(
-			"Pacman",
-			800,
-			600,
+			"Lunari",
+			width,
+			height,
 			SDL_WINDOW_RESIZABLE
 	);
 
 	if (!window)
 	{
-		std::cerr << "Fenster konnte nicht erstellt werden: " << SDL_GetError() << '\n';
+		std::cerr << "Window couldn't be created: " << SDL_GetError() << '\n';
 		SDL_Quit();
-		return 1;
+		return nullptr;
 	}
+	return window;
+}
 
+SDL_Renderer* createRenderer(SDL_Window* window)
+{
 	SDL_Renderer* renderer = SDL_CreateRenderer(window, nullptr);
 
 	if (!renderer)
@@ -37,6 +38,28 @@ int main()
 		std::cerr << SDL_GetError() << '\n';
 		SDL_DestroyWindow(window);
 		SDL_Quit();
+		return nullptr;
+	}
+	return renderer;
+}
+
+int main()
+{
+	if (!SDL_Init(SDL_INIT_VIDEO))
+	{
+		std::cerr << "SDL_Init failed: " << SDL_GetError() << '\n';
+		return 1;
+	}
+
+	SDL_Window* window = createWindow();
+	if (!window)
+	{
+		return 1;
+	}
+
+	SDL_Renderer* renderer = createRenderer(window);
+	if (!renderer)
+	{
 		return 1;
 	}
 
@@ -46,11 +69,11 @@ int main()
 	Gui layer_gui{layer_event, *renderer};
 	App layer_app{layer_gui};
 
-	/* Hauptschleife */
-	SDL_Event event{};
+	/* Main-Loop */
 	bool running{true};
 	while (running)
 	{
+		SDL_Event event{};
 		while (SDL_PollEvent(&event))
 		{
 			if (event.type == SDL_EVENT_QUIT)
@@ -59,13 +82,12 @@ int main()
 				break;
 			}
 			if (event.type == SDL_EVENT_KEY_DOWN)
-			{
 				keySignal(event.key.key);
-			}
 		}
 		layer_app.manager().render();
 	}
 
+	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
 }
