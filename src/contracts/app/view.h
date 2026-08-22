@@ -20,12 +20,10 @@ public:
 	virtual ~View() = default;
 
 	virtual void render() = 0;
-
 	virtual void entry() = 0;
-
 	virtual void exit() = 0;
-
-	virtual eView type() = 0;
+	virtual
+	[[nodiscard]] virtual eView type() const = 0;
 };
 
 #endif //SRC_CONTRACTS_VIEW_H

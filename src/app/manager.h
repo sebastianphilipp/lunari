@@ -16,15 +16,16 @@ using ChangeViewSignal = boost::signals2::signal<void(View::eView)>;
 class Manager
 {
 public:
-	explicit Manager(ChangeViewSignal &, std::vector<View *> &);
+	Manager(ChangeViewSignal&, std::vector<View*>);
+	void render();
 
 private:
-	View *getView(View::eView);
+	View* getView(View::eView);
 
 	void onViewChanged(View::eView);
 
-	std::vector<View *> &m_views;
-	View *m_activeView{nullptr};
+	std::vector<View*> m_views;
+	View* m_activeView{nullptr};
 };
 
 

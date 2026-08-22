@@ -4,7 +4,9 @@
 
 #include "manager.h"
 
-Manager::Manager(ChangeViewSignal &change, std::vector<View *> &views) : m_views{views}
+#include <utility>
+
+Manager::Manager(ChangeViewSignal& change, std::vector<View*> views) : m_views{std::move(views)}
 {
 	m_activeView = getView(View::eView::Main);
 	m_activeView->entry();
@@ -18,9 +20,9 @@ Manager::Manager(ChangeViewSignal &change, std::vector<View *> &views) : m_views
 	);
 }
 
-View *Manager::getView(View::eView type)
+View* Manager::getView(View::eView type)
 {
-	auto it = std::find_if(m_views.begin(), m_views.end(), [type](View *view)
+	auto it = std::find_if(m_views.begin(), m_views.end(), [type](View* view)
 	{ return view->type() == type; });
 	return it != m_views.end() ? *it : nullptr;
 }
@@ -34,4 +36,11 @@ void Manager::onViewChanged(View::eView type)
 	m_activeView->exit();
 	m_activeView = view;
 	m_activeView->entry();
+}
+
+void Manager::render()
+{
+	if (!m_activeView)
+		return;
+	m_activeView->render();
 }

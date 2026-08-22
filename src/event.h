@@ -12,12 +12,13 @@
 
 using KeySignal = boost::signals2::signal<void(SDL_Keycode)>;
 
-class Event {
+class Event
+{
 public:
-    explicit Event(KeySignal& keySignal);
+	explicit Event(KeySignal &keySignal);
 
 private:
-    Key m_key;
+	Key m_key;
 };
 
 

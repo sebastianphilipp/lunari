@@ -2,7 +2,9 @@
 #include <SDL3/SDL.h>
 #include <boost/signals2.hpp>
 
-#include "event.h"
+#include <event.h>
+#include <gui.h>
+#include <app.h>
 
 using KeySignal = boost::signals2::signal<void(SDL_Keycode)>;
 
@@ -14,7 +16,7 @@ int main()
 		return 1;
 	}
 
-	SDL_Window *window = SDL_CreateWindow(
+	SDL_Window* window = SDL_CreateWindow(
 			"Pacman",
 			800,
 			600,
@@ -28,7 +30,7 @@ int main()
 		return 1;
 	}
 
-	SDL_Renderer *renderer = SDL_CreateRenderer(window, nullptr);
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, nullptr);
 
 	if (!renderer)
 	{
@@ -41,6 +43,8 @@ int main()
 	KeySignal keySignal{};
 
 	Event layer_event{keySignal};
+	Gui layer_gui{};
+	App layer_app{layer_gui};
 
 	SDL_Event event{};
 	bool running{true};
