@@ -6,3 +6,8 @@
 
 App::App(Gui& gui) : m_manager{gui.signal(), std::vector<View*>{&gui.menu()}}
 {}
+
+Manager& App::manager()
+{
+	return m_manager;
+}

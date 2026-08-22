@@ -43,9 +43,10 @@ int main()
 	KeySignal keySignal{};
 
 	Event layer_event{keySignal};
-	Gui layer_gui{};
+	Gui layer_gui{*renderer};
 	App layer_app{layer_gui};
 
+	/* Hauptschleife */
 	SDL_Event event{};
 	bool running{true};
 	while (running)
@@ -62,6 +63,7 @@ int main()
 				keySignal(event.key.key);
 			}
 		}
+		layer_app.manager().render();
 	}
 
 	SDL_DestroyWindow(window);

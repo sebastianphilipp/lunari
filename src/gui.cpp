@@ -4,7 +4,7 @@
 
 #include "gui.h"
 
-Gui::Gui() : m_menu{m_signal}
+Gui::Gui(SDL_Renderer& renderer) : m_renderer{renderer}, m_menu{m_signal}
 {}
 
 ChangeViewSignal& Gui::signal()

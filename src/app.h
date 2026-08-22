@@ -18,6 +18,7 @@ class App
 public:
 	explicit App(Gui&);
 
+	Manager& manager();
 private:
 	Manager m_manager;
 };

@@ -8,6 +8,7 @@
 #include <contracts/app/view.h>
 
 #include <boost/signals2.hpp>
+#include <SDL3/SDL.h>
 
 #include <gui/menu.h>
 
@@ -16,7 +17,7 @@ using ChangeViewSignal = boost::signals2::signal<void(View::eView)>;
 class Gui
 {
 public:
-	explicit Gui();
+	explicit Gui(SDL_Renderer&);
 
 	ChangeViewSignal& signal();
 	Menu& menu();

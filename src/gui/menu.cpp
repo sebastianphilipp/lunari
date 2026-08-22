@@ -4,7 +4,7 @@
 
 #include "menu.h"
 
-Menu::Menu(ChangeViewSignal& change) : m_change{change}
+Menu::Menu(SDL_Renderer& renderer, ChangeViewSignal& signal) : m_renderer{renderer},  m_signal{signal}
 {}
 
 void Menu::render()
