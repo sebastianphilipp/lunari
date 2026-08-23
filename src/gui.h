@@ -9,6 +9,7 @@
 
 #include <boost/signals2.hpp>
 #include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 
 #include <gui/menu.h>
 
@@ -19,7 +20,7 @@ using ChangeViewSignal = boost::signals2::signal<void(View::eView)>;
 class Gui
 {
 public:
-	explicit Gui(Event&, SDL_Renderer&);
+	Gui(SDL_Renderer&, TTF_TextEngine&, TTF_Font&, Event&);
 
 	Menu& menu();
 

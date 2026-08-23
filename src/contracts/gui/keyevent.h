@@ -6,6 +6,7 @@
 #define SRC_CONTRACTS_GUI_KEYEVENT_H
 
 #include <boost/signals2.hpp>
+#include <SDL3/SDL.h>
 
 using KeySignal = boost::signals2::signal<void(SDL_Keycode)>;
 

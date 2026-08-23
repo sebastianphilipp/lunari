@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SDL3/SDL.h>
+#include <SDL3_ttf/SDL_ttf.h>
 #include <boost/signals2.hpp>
 
 #include <event.h>
@@ -51,6 +52,12 @@ int main()
 		return 1;
 	}
 
+	if (!TTF_Init())
+	{
+		std::cerr << "SDL_TTF_Init failed: " << SDL_GetError() << '\n';
+		return 1;
+	}
+
 	SDL_Window* window = createWindow();
 	if (!window)
 	{
@@ -63,10 +70,24 @@ int main()
 		return 1;
 	}
 
+	TTF_TextEngine* textEngine = TTF_CreateRendererTextEngine(renderer);
+	if (!textEngine)
+	{
+		std::cerr << "SDL TTF text engine creation failed: " << SDL_GetError() << '\n';
+		return 1;
+	}
+
+	TTF_Font* font = TTF_OpenFont("/System/Library/Fonts/Supplemental/Arial.ttf", 32.0f);
+	if (!font)
+	{
+		std::cerr << "SDL TTF font creation failed: " << SDL_GetError() << '\n';
+		return 1;
+	}
+
 	KeySignal keySignal{};
 
 	Event layer_event{keySignal};
-	Gui layer_gui{layer_event, *renderer};
+	Gui layer_gui{*renderer, *textEngine, *font, layer_event};
 	App layer_app{layer_gui};
 
 	/* Main-Loop */
@@ -86,6 +107,10 @@ int main()
 		}
 		layer_app.manager().render();
 	}
+
+	TTF_DestroyRendererTextEngine(textEngine);
+	TTF_CloseFont(font);
+	TTF_Quit();
 
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
