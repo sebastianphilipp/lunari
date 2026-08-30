@@ -2,188 +2,66 @@
 top to bottom direction
 
 namespace common {
-  enum Difficulty {
-    Easy
-    Medium
-    Hard
-  }
+    enum eView {
+      Game
+      Settings
+    }
 }
 
 namespace app {
   class Manager
 
-  enum Views {
-    InGame
-    Settings
-  }
-
-  interface View {
+  interface IView {
     + join() : void
-    + signal change(Views)
+    + signal change(eView)
     + exit() : void
     + render() : void
-    + type() : Views
+    + type() : eView
   }
 
-  interface General {
-    + fps() : size_t
-  }
-
-  Views --+ View
-  Manager ..> "*" View
-  Manager ..> General
+  Manager ..> "*" IView
 }
 
 namespace gui {
-  class Settings
-  class InGame
-  class General
   class Game
-  class Scoreboard
+  class Settings
 
-  struct Ghost {
-    size_t x
-    size_t y
-    bool alive
+  interface IKeyEvent {
+    + event() : SDL_KeyCode
   }
 
-  struct Player {
-    std::string name
-    size_t x
-    size_t y
-    bool alive
-  }
-
-  struct GameState {
-    int[][] map
-    std::vector<Ghost> ghosts
-    Player player
-  }
-
-  interface GameSettings {
-    + setName(std::string) : void
-    + name() : std::string
-    + setDifficulty(common::Difficulty) : void
-    + difficulty() : common::Difficulty
-  }
-
-  interface ScoreboardSettings {
-    + scoreBoard() : std::vector<std::tuple<std::string, size_t>>
-  }
-
-  interface KeyEvent {
-    + signal key(code)
-  }
-
-  enum ExitType {
-    Error
-    Won
-    Lost
-  }
-
-  interface GameLogic {
+  interface ISettings {
     + join() : void
-    + signal exit(ExitType)
-    + state() : GameState&
-    + update() : void
+    + signal change(eView)
     + exit() : void
+    + render() : void
   }
 
-  interface GeneralSettings {
-    + setFps(size_t) : void
-    + fps() : size_t
-  }
-
-  interface MapSettings {
-    + setMap(std::string) : void
-    + map() : std::string
-  }
-
-  Settings ..|> app.View
-  InGame ..|> app.View
-  InGame ..> GameSettings
-  InGame ..> MapSettings
-  InGame ..> KeyEvent
-  Settings ..> KeyEvent
-  Scoreboard ..> KeyEvent
-  General ..> KeyEvent
-  Game ..> GameLogic
-  Game ..|> app.View
-  General ..|> app.View
-  Scoreboard ..|> app.View
-  Scoreboard ..> ScoreboardSettings
-  General ..|> app.General
-  General ..> GeneralSettings
-  Ghost --+ GameLogic
-  Player --+ GameLogic
-  GameState --+ GameLogic
-  ExitType --+ GameLogic
-}
-
-namespace logic {
-    class GameLogic
-    class Key
-
-    interface GameSettings {
-      + difficulty() : common::Difficulty
-      + name() : std::string
-    }
-
-    interface ScoreboardSettings {
-      + add(std::vector<std::tuple<std::string, size_t>>) : void
-    }
-
-    interface KeyEvent {
-      + signal key(code)
-    }
-
-     interface MapSettings {
-      + map() : std::string
-    }
-
-    GameLogic ..|> gui.GameLogic
-    Key ..> KeyEvent
-    Key ..|> gui.KeyEvent
-    GameLogic ..> KeyEvent
-    GameLogic ..> ScoreboardSettings
-    GameLogic ..> MapSettings
-    GameLogic ..> GameSettings
+  Settings ..|> app.IView
+  Game ..|> app.IView
+  Game ..> IKeyEvent
+  Settings ..> ISettings
 }
 
 namespace settings {
-    class GameSettings
-    class GeneralSettings
-    class MapSettings
-    class ScoreboardSettings
+    class Settings
+    class Player
 
-    interface SettingsFile {
-        + read(std::string) : std::string
-        + write(std::string, std::string) : void
+    interface IKeyEvent {
+      + event() : SDL_KeyCode
     }
 
-    GameSettings ..|> logic.GameSettings
-    GameSettings ..|> gui.GameSettings
-    GeneralSettings ..|> gui.GeneralSettings
-    GameSettings ..> SettingsFile
-    ScoreboardSettings ..|> logic.ScoreboardSettings
-    ScoreboardSettings ..|> gui.ScoreboardSettings
-    ScoreboardSettings ..> SettingsFile
-    GeneralSettings ..> SettingsFile
-    MapSettings ..|> logic.MapSettings
-    MapSettings ..|> gui.MapSettings
-    MapSettings ..> SettingsFile
-}
-
-namespace ini {
-    class SettingsFile
-
-    SettingsFile ..|> settings.SettingsFile
+    Settings ..|> gui.ISettings
+    Player ..|> gui.ISettings
+    Settings ..> IKeyEvent
+    Player ..> IKeyEvent
 }
 
 namespace event {
     class KeyEvent
 
-    KeyEvent ..|> logic.KeyEvent
+    KeyEvent ..|> gui.IKeyEvent
+    KeyEvent ..|> settings.IKeyEvent
 }
 
 @enduml
