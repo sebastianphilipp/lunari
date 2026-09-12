@@ -11,8 +11,6 @@
 
 #include <gui.h>
 
-using ChangeViewSignal = boost::signals2::signal<void(View::eView)>;
-
 class App
 {
 public:

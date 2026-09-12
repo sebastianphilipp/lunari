@@ -10,8 +10,6 @@
 #include <boost/signals2.hpp>
 #include <vector>
 
-using ChangeViewSignal = boost::signals2::signal<void(View::eView)>;
-
 class Manager
 {
 public:
@@ -19,9 +17,9 @@ public:
 	void render();
 
 private:
-	View* getView(View::eView);
+	View* getView(common::eView);
 
-	void onViewChanged(View::eView);
+	void onViewChanged(common::eView);
 
 	std::vector<View*> m_views;
 	View* m_activeView{nullptr};

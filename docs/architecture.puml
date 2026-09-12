@@ -16,52 +16,47 @@ namespace app {
     + signal change(eView)
     + exit() : void
     + render() : void
-    + type() : eView
+    + type() const : eView
   }
 
   Manager ..> "*" IView
 }
 
 namespace gui {
-  class Game
-  class Settings
+  class Main
+  class Menu
 
   interface IKeyEvent {
     + event() : SDL_KeyCode
   }
 
-  interface ISettings {
-    + join() : void
+  interface IMenuLogic {
+    + label(int) const : std::string
+    + value(int) const : std::string
+    + settingsCount() const : int
+    + handleKey(int, keycode) : void
     + signal change(eView)
-    + exit() : void
-    + render() : void
   }
 
-  Settings ..|> app.IView
-  Game ..|> app.IView
-  Game ..> IKeyEvent
-  Settings ..> ISettings
+  Menu ..|> app.IView
+  Main ..|> app.IView
+  Main ..> IKeyEvent
+  Menu ..> IMenuLogic
+  Menu ..> IKeyEvent
 }
 
-namespace settings {
-    class Settings
+namespace menu {
+    class General
     class Player
 
-    interface IKeyEvent {
-      + event() : SDL_KeyCode
-    }
-
-    Settings ..|> gui.ISettings
-    Player ..|> gui.ISettings
-    Settings ..> IKeyEvent
-    Player ..> IKeyEvent
+    General ..|> gui.IMenuLogic
+    Player ..|> gui.IMenuLogic
 }
 
 namespace event {
     class KeyEvent
 
     KeyEvent ..|> gui.IKeyEvent
-    KeyEvent ..|> settings.IKeyEvent
 }
 
 @enduml

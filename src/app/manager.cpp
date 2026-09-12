@@ -8,7 +8,7 @@
 
 Manager::Manager(std::vector<View*> views) : m_views{std::move(views)}
 {
-	m_activeView = getView(View::eView::Main);
+	m_activeView = getView(common::eView::Main);
 	m_activeView->entry();
 
 	for (View* view : m_views)
@@ -21,14 +21,14 @@ Manager::Manager(std::vector<View*> views) : m_views{std::move(views)}
 	}
 }
 
-View* Manager::getView(View::eView type)
+View* Manager::getView(common::eView type)
 {
 	auto it = std::find_if(m_views.begin(), m_views.end(), [type](View* view)
 	{ return view->type() == type; });
 	return it != m_views.end() ? *it : nullptr;
 }
 
-void Manager::onViewChanged(View::eView type)
+void Manager::onViewChanged(common::eView type)
 {
 	auto view = getView(type);
 	if (!view)

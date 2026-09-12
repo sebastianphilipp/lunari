@@ -6,6 +6,7 @@
 #include <event.h>
 #include <gui.h>
 #include <app.h>
+#include <menu.h>
 
 using KeySignal = boost::signals2::signal<void(SDL_Keycode)>;
 
@@ -89,6 +90,7 @@ int main()
 	Event layer_event{keySignal};
 	Gui layer_gui{*renderer, *textEngine, *font, layer_event};
 	App layer_app{layer_gui};
+	Menu layer_menu{};
 
 	/* Main-Loop */
 	bool running{true};
@@ -103,7 +105,9 @@ int main()
 				break;
 			}
 			if (event.type == SDL_EVENT_KEY_DOWN)
+			{
 				keySignal(event.key.key);
+			}
 		}
 		layer_app.manager().render();
 	}
