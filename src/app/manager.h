@@ -10,6 +10,8 @@
 #include <boost/signals2.hpp>
 #include <vector>
 
+namespace app
+{
 class Manager
 {
 public:
@@ -24,6 +26,7 @@ private:
 	std::vector<View*> m_views;
 	View* m_activeView{nullptr};
 };
+}
 
 
 #endif //SRC_APP_MANAGER_H

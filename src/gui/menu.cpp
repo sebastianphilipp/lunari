@@ -4,6 +4,8 @@
 
 #include <gui/menu.h>
 
+namespace gui
+{
 Menu::Menu(SDL_Renderer& renderer, TTF_TextEngine& textEngine, TTF_Font& font, common::eView view, KeyEvent& keyEvent,
 		   MenuLogic& menuLogic) : m_renderer{
 		renderer}, m_textEngine{textEngine}, m_font{font}, m_view{view}, m_keyEvent{keyEvent}, m_menuLogic{menuLogic}
@@ -113,7 +115,7 @@ common::eView Menu::type() const
 	return m_view;
 }
 
-ChangeViewSignal& Menu::change()
+app::ChangeViewSignal& Menu::change()
 {
 	return m_change;
 }
@@ -142,4 +144,5 @@ void Menu::onKeyDown(SDL_Keycode key)
 	}
 
 	m_menuLogic.handleKey(m_selectedItem, key);
+}
 }

@@ -4,5 +4,13 @@
 
 #include <menu.h>
 
+namespace menu
+{
 Menu::Menu()
 {}
+
+General& Menu::general()
+{
+	return m_general;
+}
+}

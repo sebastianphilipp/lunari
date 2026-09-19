@@ -10,16 +10,21 @@
 
 #include <contracts/gui/keyevent.h>
 
-class Key : public KeyEvent {
+namespace event
+{
+using KeySignal = gui::KeySignal;
+
+class Key : public gui::KeyEvent {
 public:
-    explicit Key(KeySignal& keySignal);
-	KeySignal& key() override;
+	    explicit Key(KeySignal& keySignal);
+	gui::KeySignal& key() override;
 
 private:
-	KeySignal m_key{};
+	gui::KeySignal m_key{};
 
     void onKeyDown(SDL_Keycode key);
 };
+}
 
 
 #endif //SRC_EVENT_KEY_H

@@ -7,6 +7,8 @@
 
 #include <event/key.h>
 
+namespace event
+{
 Key::Key(KeySignal& keySignal)
 {
     keySignal.connect(boost::bind(&Key::onKeyDown, this, boost::placeholders::_1));
@@ -19,5 +21,6 @@ KeySignal& Key::key()
 
 void Key::onKeyDown(SDL_Keycode key)
 {
-    m_key(key);
+	    m_key(key);
+}
 }

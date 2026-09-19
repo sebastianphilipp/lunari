@@ -16,9 +16,9 @@
 #include <vector>
 #include <string>
 
-using ChangeViewSignal = boost::signals2::signal<void(common::eView)>;
-
-class Menu : public View
+namespace gui
+{
+class Menu : public app::View
 {
 public:
 	Menu(SDL_Renderer&, TTF_TextEngine&, TTF_Font&, common::eView, KeyEvent&, MenuLogic&);
@@ -28,16 +28,10 @@ public:
 	void entry() override;
 	void exit() override;
 	[[nodiscard]] common::eView type() const override;
-	ChangeViewSignal& change() override;
+	app::ChangeViewSignal& change() override;
 
 private:
 	struct SelectedValue
-	{
-		std::string text{};
-		TTF_Text* ttfText{nullptr};
-	};
-
-	struct Label
 	{
 		std::string text{};
 		TTF_Text* ttfText{nullptr};
@@ -52,12 +46,13 @@ private:
 	KeyEvent& m_keyEvent;
 	MenuLogic& m_menuLogic;
 
-	ChangeViewSignal m_change{};
+	app::ChangeViewSignal m_change{};
 	boost::signals2::scoped_connection m_keyConnection{};
 	std::vector<Label> m_labels{};
 	SelectedValue m_value{};
 	size_t m_selectedItem{0};
 };
+}
 
 
 #endif //SRC_GUI_MENU_H

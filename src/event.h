@@ -10,8 +10,8 @@
 
 #include "event/key.h"
 
-using KeySignal = boost::signals2::signal<void(SDL_Keycode)>;
-
+namespace event
+{
 class Event
 {
 public:
@@ -21,6 +21,7 @@ public:
 private:
 	Key m_key;
 };
+}
 
 
 #endif //SRC_EVENT_H

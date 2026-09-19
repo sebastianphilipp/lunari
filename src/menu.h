@@ -7,6 +7,8 @@
 
 #include <menu/general.h>
 
+namespace menu
+{
 class Menu
 {
 public:
@@ -17,6 +19,7 @@ public:
 private:
 	General m_general;
 };
+}
 
 
-#endif //SRC_GUI_H
+#endif //SRC_MENU_H

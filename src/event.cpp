@@ -4,10 +4,13 @@
 
 #include "event.h"
 
+namespace event
+{
 Event::Event(KeySignal& keySignal) : m_key{keySignal}
 {}
 
 Key& Event::key()
 {
 	return m_key;
+}
 }

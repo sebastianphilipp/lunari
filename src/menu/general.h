@@ -11,16 +11,16 @@
 
 #include <array>
 
-using ChangeViewSignal = boost::signals2::signal<void(common::eView)>;
-
-class General : public MenuLogic
+namespace menu
+{
+class General : public gui::MenuLogic
 {
 public:
 	General();
 
 	std::string label(size_t) const override;
 	std::string value(size_t) const override;
-	ChangeViewSignal& change() override;
+	gui::ChangeViewSignal& change() override;
 	size_t settingsCount() const override;
 	void handleKey(size_t, SDL_Keycode) override;
 
@@ -30,8 +30,9 @@ private:
 
 	const std::array<std::string_view, 2> m_entries{kPlayer, kNetwork};
 	
-	ChangeViewSignal m_change{};
+	gui::ChangeViewSignal m_change{};
 };
+}
 
 
 #endif //SRC_MENU_GENERAL_H

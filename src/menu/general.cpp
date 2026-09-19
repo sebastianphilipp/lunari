@@ -4,6 +4,10 @@
 
 #include <menu/general.h>
 
+namespace menu
+{
+General::General() = default;
+
 std::string General::label(size_t index) const
 {
 	return std::string{m_entries.at(index)};
@@ -15,7 +19,7 @@ std::string General::value(size_t index) const
 	return "";
 }
 
-ChangeViewSignal& General::change()
+gui::ChangeViewSignal& General::change()
 {
 	return m_change;
 }
@@ -36,4 +40,5 @@ void General::handleKey(size_t index, SDL_Keycode keycode)
 	{
 		return;
 	}
+}
 }

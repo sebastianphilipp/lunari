@@ -11,15 +11,18 @@
 
 #include <gui.h>
 
+namespace app
+{
 class App
 {
 public:
-	explicit App(Gui&);
+	explicit App(gui::Gui&);
 
 	Manager& manager();
 private:
 	Manager m_manager;
 };
+}
 
 
 #endif //SRC_APP_H

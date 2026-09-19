@@ -4,10 +4,13 @@
 
 #include "app.h"
 
-App::App(Gui& gui) : m_manager{std::vector<View*>{&gui.menu()}}
+namespace app
+{
+App::App(gui::Gui& gui) : m_manager{std::vector<View*>{&gui.main(), &gui.menu()}}
 {}
 
 Manager& App::manager()
 {
 	return m_manager;
+}
 }

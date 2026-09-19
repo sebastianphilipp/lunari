@@ -8,8 +8,6 @@
 #include <app.h>
 #include <menu.h>
 
-using KeySignal = boost::signals2::signal<void(SDL_Keycode)>;
-
 SDL_Window* createWindow()
 {
 	constexpr size_t width = 800;
@@ -85,12 +83,12 @@ int main()
 		return 1;
 	}
 
-	KeySignal keySignal{};
+	event::KeySignal keySignal{};
 
-	Event layer_event{keySignal};
-	Gui layer_gui{*renderer, *textEngine, *font, layer_event};
-	App layer_app{layer_gui};
-	Menu layer_menu{};
+	event::Event layer_event{keySignal};
+	menu::Menu layer_menu{};
+	gui::Gui layer_gui{*renderer, *textEngine, *font, layer_event, layer_menu};
+	app::App layer_app{layer_gui};
 
 	/* Main-Loop */
 	bool running{true};

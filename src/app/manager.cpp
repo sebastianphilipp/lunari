@@ -6,6 +6,8 @@
 
 #include <utility>
 
+namespace app
+{
 Manager::Manager(std::vector<View*> views) : m_views{std::move(views)}
 {
 	m_activeView = getView(common::eView::Main);
@@ -44,4 +46,5 @@ void Manager::render()
 	if (!m_activeView)
 		return;
 	m_activeView->render();
+}
 }
