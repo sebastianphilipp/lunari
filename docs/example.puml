@@ -54,12 +54,6 @@ namespace gui {
     bool alive
   }
 
-  struct GameState {
-    int[][] map
-    std::vector<Ghost> ghosts
-    Player player
-  }
-
   interface GameSettings {
     + setName(std::string) : void
     + name() : std::string
@@ -81,12 +75,8 @@ namespace gui {
     Lost
   }
 
-  interface GameLogic {
-    + join() : void
-    + signal exit(ExitType)
-    + state() : GameState&
-    + update() : void
-    + exit() : void
+  interface GameController {
+    + processKey(code)
   }
 
   interface GeneralSettings {
@@ -101,75 +91,100 @@ namespace gui {
 
   Settings ..|> app.View
   InGame ..|> app.View
-  InGame ..> GameSettings
+  InGame ..> GameController
   InGame ..> MapSettings
   InGame ..> KeyEvent
   Settings ..> KeyEvent
   Scoreboard ..> KeyEvent
   General ..> KeyEvent
-  Game ..> GameLogic
+  Game ..> GameController
   Game ..|> app.View
   General ..|> app.View
   Scoreboard ..|> app.View
   Scoreboard ..> ScoreboardSettings
   General ..|> app.General
   General ..> GeneralSettings
-  Ghost --+ GameLogic
-  Player --+ GameLogic
-  GameState --+ GameLogic
-  ExitType --+ GameLogic
+  Ghost --+ GameController
+  Player --+ GameController
+  ExitType --+ GameController
+}
+
+namespace controller {
+    class GameController
+
+    interface MovementLogic {
+        + move(key)
+    }
+
+    interface InteractionLogic {
+        + interact(x, y)
+    }
+
+    interface CombatLogic {
+        + hit(Player)
+    }
+
+    interface WorldState {
+        + map() : array<Element>[][]
+    }
+
+    interface PlayerState {
+        + players() : array<Player>[]
+    }
+
+    GameController ..|> gui.GameController
+    GameController ..> MovementLogic
+    GameController ..> CombatLogic
+    GameController ..> InteractionLogic
+    GameController ..> WorldState
+    GameController ..> PlayerState
 }
 
 namespace logic {
-    class GameLogic
-    class Key
+    class Interaction
+    class Movement
+    class Combat
 
-    interface GameSettings {
-      + difficulty() : common::Difficulty
-      + name() : std::string
-    }
+        interface WorldState {
+            + map() : array<Element>[][]
+        }
 
-    interface ScoreboardSettings {
-      + add(std::vector<std::tuple<std::string, size_t>>) : void
-    }
+        interface PlayerState {
+           + players() : array<Player>[]
+        }
 
-    interface KeyEvent {
-      + signal key(code)
-    }
+    Interaction ..|> controller.InteractionLogic
+    Movement ..|> controller.MovementLogic
+    Combat ..|> controller.CombatLogic
+    Interaction ..> WorldState
+    Movement ..> PlayerState
+    Movement ..> WorldState
+}
 
-     interface MapSettings {
-      + map() : std::string
-    }
+namespace state {
+    class PlayerState
+    class WorldState
 
-    GameLogic ..|> gui.GameLogic
-    Key ..> KeyEvent
-    Key ..|> gui.KeyEvent
-    GameLogic ..> KeyEvent
-    GameLogic ..> ScoreboardSettings
-    GameLogic ..> MapSettings
-    GameLogic ..> GameSettings
+    PlayerState ..|> logic.PlayerState
+    PlayerState ..|> controller.PlayerState
+    WorldState ..|> logic.WorldState
+    WorldState ..|> controller.WorldState
 }
 
 namespace settings {
     class GameSettings
     class GeneralSettings
     class MapSettings
-    class ScoreboardSettings
 
     interface SettingsFile {
         + read(std::string) : std::string
         + write(std::string, std::string) : void
     }
 
-    GameSettings ..|> logic.GameSettings
     GameSettings ..|> gui.GameSettings
     GeneralSettings ..|> gui.GeneralSettings
     GameSettings ..> SettingsFile
-    ScoreboardSettings ..|> logic.ScoreboardSettings
-    ScoreboardSettings ..|> gui.ScoreboardSettings
-    ScoreboardSettings ..> SettingsFile
     GeneralSettings ..> SettingsFile
-    MapSettings ..|> logic.MapSettings
     MapSettings ..|> gui.MapSettings
     MapSettings ..> SettingsFile
 }
@@ -183,7 +198,7 @@ namespace ini {
 namespace event {
     class KeyEvent
 
-    KeyEvent ..|> logic.KeyEvent
+    KeyEvent ..|> gui.KeyEvent
 }
 
 @enduml
