@@ -7,17 +7,20 @@
 
 #include <controller/gamecontroller.h>
 
+#include <state.h>
+
 namespace controller
 {
 class Controller
 {
 public:
-	/* todo */
-	Controller() = default;
+	Controller(state::State&);
 
 	GameController& gameController();
 
 private:
+	state::State& m_state;
+
 	GameController m_gameController;
 };
 }

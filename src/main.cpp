@@ -86,11 +86,11 @@ int main()
 	}
 
 	event::KeySignal keySignal{};
-	controller::Controller layer_controller{};
-	state::State layer_state{};
 	event::Event layer_event{keySignal};
+	state::State layer_state{};
+	controller::Controller layer_controller{layer_state};
 	menu::Menu layer_menu{};
-	gui::Gui layer_gui{*renderer, *textEngine, *font, layer_event, layer_menu, layer_controller};
+	gui::Gui layer_gui{*renderer, *textEngine, *font, layer_event, layer_menu, layer_controller, layer_state};
 	app::App layer_app{layer_gui};
 
 	/* Main-Loop */

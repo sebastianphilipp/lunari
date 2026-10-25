@@ -8,13 +8,14 @@
 #include <contracts/app/view.h>
 #include <contracts/gui/keyevent.h>
 #include <contracts/gui/gamecontroller.h>
+#include <contracts/gui/worldstate.h>
 
 namespace gui
 {
 class Game : public app::View
 {
 public:
-	Game(SDL_Renderer&, KeyEvent&, GameController&);
+	Game(SDL_Renderer&, KeyEvent&, GameController&, WorldState&);
 
 	void render() override;
 	void entry() override;
@@ -26,8 +27,12 @@ private:
 	SDL_Renderer& m_renderer;
 	KeyEvent& m_keyEvent;
 	GameController& m_gameController;
+	WorldState& m_worldState;
+
+	void onKeyDown(SDL_Keycode key);
 
 	app::ChangeViewSignal m_change{};
+	boost::signals2::scoped_connection m_keyConnection{};
 };
 }
 

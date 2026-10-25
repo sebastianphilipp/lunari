@@ -6,6 +6,10 @@
 
 namespace controller
 {
+Controller::Controller(state::State& state) : m_state{state}
+{
+}
+
 GameController& Controller::gameController()
 {
 	return m_gameController;

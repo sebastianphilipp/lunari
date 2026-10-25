@@ -7,10 +7,10 @@
 namespace gui
 {
 Gui::Gui(SDL_Renderer& renderer, TTF_TextEngine& textEngine, TTF_Font& font, event::Event& event,
-		 menu::Menu& menu, controller::Controller& controller) : m_main{renderer, textEngine, font, event.key()},
-																 m_menu{renderer, textEngine, font, common::eView::GeneralSettings, event.key(),
-																		menu.general()},
-																 m_game{renderer, event.key(), controller.gameController()}
+		 menu::Menu& menu, controller::Controller& controller, state::State& state) : m_main{renderer, textEngine, font, event.key()},
+																					  m_menu{renderer, textEngine, font, common::eView::GeneralSettings, event.key(),
+																							 menu.general()},
+																					  m_game{renderer, event.key(), controller.gameController(), state.worldState()}
 {}
 
 Main& Gui::main()

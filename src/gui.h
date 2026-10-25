@@ -15,13 +15,14 @@
 #include <event.h>
 #include <menu.h>
 #include <controller.h>
+#include <state.h>
 
 namespace gui
 {
 class Gui
 {
 public:
-	Gui(SDL_Renderer&, TTF_TextEngine&, TTF_Font&, event::Event&, menu::Menu&, controller::Controller&);
+	Gui(SDL_Renderer&, TTF_TextEngine&, TTF_Font&, event::Event&, menu::Menu&, controller::Controller&, state::State&);
 
 	Main& main();
 	Menu& menu();
