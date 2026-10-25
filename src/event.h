@@ -8,14 +8,14 @@
 #include <boost/signals2.hpp>
 #include <SDL3/SDL.h>
 
-#include "event/key.h"
+#include <event/key.h>
 
 namespace event
 {
 class Event
 {
 public:
-	explicit Event(KeySignal &keySignal);
+	explicit Event(KeySignal& keySignal);
 	Key& key();
 
 private:

@@ -10,23 +10,27 @@
 
 #include <gui/main.h>
 #include <gui/menu.h>
+#include <gui/game.h>
 
 #include <event.h>
 #include <menu.h>
+#include <controller.h>
 
 namespace gui
 {
 class Gui
 {
 public:
-	Gui(SDL_Renderer&, TTF_TextEngine&, TTF_Font&, event::Event&, menu::Menu&);
+	Gui(SDL_Renderer&, TTF_TextEngine&, TTF_Font&, event::Event&, menu::Menu&, controller::Controller&);
 
 	Main& main();
 	Menu& menu();
+	Game& game();
 
 private:
 	Main m_main;
 	Menu m_menu;
+	Game m_game;
 };
 }
 

@@ -7,6 +7,8 @@
 #include <gui.h>
 #include <app.h>
 #include <menu.h>
+#include <controller.h>
+#include <state.h>
 
 SDL_Window* createWindow()
 {
@@ -84,10 +86,11 @@ int main()
 	}
 
 	event::KeySignal keySignal{};
-
+	controller::Controller layer_controller{};
+	state::State layer_state{};
 	event::Event layer_event{keySignal};
 	menu::Menu layer_menu{};
-	gui::Gui layer_gui{*renderer, *textEngine, *font, layer_event, layer_menu};
+	gui::Gui layer_gui{*renderer, *textEngine, *font, layer_event, layer_menu, layer_controller};
 	app::App layer_app{layer_gui};
 
 	/* Main-Loop */
