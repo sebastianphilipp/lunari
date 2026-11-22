@@ -5,7 +5,7 @@
 #ifndef SRC_CONTRACTS_GUI_WORLDSTATE_H
 #define SRC_CONTRACTS_GUI_WORLDSTATE_H
 
-#include <common/mapobject.h>
+#include <common/map.h>
 
 #include <vector>
 
@@ -15,6 +15,7 @@ namespace gui
 {
 class WorldState
 {
+public:
 	virtual const WorldMap& map() const = 0;
 };
 }

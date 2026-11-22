@@ -6,9 +6,13 @@
 #define SRC_COMMON_MAPOBJECT_H
 
 #include <cstdint>
+#include <cstddef>
 
 namespace common
 {
+static constexpr size_t kBlockTextureHeight{80U};
+static constexpr size_t kBlockTextureWidth{80U};
+
 enum eMapObject : uint8_t
 {
 	Empty = 0,

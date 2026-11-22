@@ -10,4 +10,9 @@ WorldState& State::worldState()
 {
 	return m_worldState;
 }
+
+PlayerState& State::playerState()
+{
+	return m_playerState;
+}
 }
