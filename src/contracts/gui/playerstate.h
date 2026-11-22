@@ -14,7 +14,7 @@ namespace gui
 class PlayerState
 {
 public:
-	[[nodiscard]] virtual const common::Player& player() const = 0;
+	[[nodiscard]] virtual const common::sPlayer& player() const = 0;
 };
 }
 

@@ -5,21 +5,29 @@
 #include <gui/game.h>
 
 #include <common/player.h>
+#include <common/map.h>
 
 #include <algorithm>
 #include <cmath>
 
 namespace gui
 {
-Game::Game(SDL_Renderer& renderer, KeyEvent& keyEvent, GameController& gameController, WorldState& worldState, PlayerState& playerState) : m_renderer{renderer}, m_keyEvent{keyEvent},
-																																		   m_gameController{gameController},
-																																		   m_worldState{worldState}, m_playerState{playerState}
+Game::Game(SDL_Renderer& renderer, KeyEvent& keyEvent, GameController& gameController, WorldState& worldState, PlayerState& playerState, TextureHandler& textureHandler) : m_renderer{renderer},
+																																										   m_keyEvent{keyEvent},
+																																										   m_gameController{
+																																												   gameController},
+																																										   m_worldState{worldState},
+																																										   m_playerState{playerState},
+																																										   m_textureHandler{
+																																												   textureHandler}
 {
 }
 
 void Game::render()
 {
+	SDL_RenderClear(&m_renderer);
 	drawMap();
+	SDL_RenderPresent(&m_renderer)
 }
 
 void Game::entry()
@@ -55,7 +63,7 @@ void Game::onKeyDown(SDL_Keycode key)
 void Game::drawMap()
 {
 	bool displayResolutionValid = false;
-	const DisplayResolution displayResolution = displayResoultion(displayResolutionValid);
+	const sDisplayResolution displayResolution = displayResoultion(displayResolutionValid);
 	if (!displayResolutionValid)
 	{
 		return;
@@ -89,7 +97,7 @@ void Game::drawMap()
 	{
 		return left.size() < right.size();
 	})->size();
-	const common::Player& player = m_playerState.player();
+	const common::sPlayer& player = m_playerState.player();
 
 	const size_t maxStartX = mapWidth > blocksPerWidth ? mapWidth - blocksPerWidth : 0U;
 	const size_t maxStartY = mapHeight > blocksPerHeight ? mapHeight - blocksPerHeight : 0U;
@@ -105,28 +113,61 @@ void Game::drawMap()
 		{
 			const float x = i * blockSize;
 			const float y = j * blockSize;
-			drawMapObject(row.at(startX + i), x, y, scaleFactor);
+			drawBlock(row.at(startX + i), x, y, scaleFactor);
 		}
 	}
 }
 
-void Game::drawMapObject(common::eMapObject, float x, float y, float scale)
+void Game::drawBlock(common::eBlock block, float x, float y, float scale)
 {
+	if (blockTextures.find(block) == blockTextures.end())
+	{
+		createBlockTexture(block);
+	}
+
 	const float blockSize = kReferenceBlockSize * scale;
 	const SDL_FRect rect{x, y, blockSize, blockSize};
-	/* dummy */
-	SDL_SetRenderDrawColor(&m_renderer, 255, 0, 0, 255);
-	SDL_RenderFillRect(&m_renderer, &rect);
+	SDL_RenderTexture(&m_renderer, blockTextures.at(block), nullptr, &rect);
 }
 
-Game::DisplayResolution Game::displayResoultion(bool& valid) const
+void Game::createBlockTexture(common::eBlock block)
+{
+	SDL_Surface* surface = SDL_CreateSurface(common::kBlockTextureWidth, common::kBlockTextureHeight, SDL_PIXELFORMAT_RGBA32);
+	if (!surface)
+	{
+		throw std::runtime_error(SDL_GetError());
+	}
+
+	const auto pixels = m_textureHandler.block(block);
+	for (int x = 0; x < common::kBlockTextureWidth; ++x)
+	{
+		for (int y = 0; y < common::kBlockTextureHeight; ++y)
+		{
+			const common::sRgb& pixel = pixels[y][x];
+			SDL_WriteSurfacePixel(surface, x, y, pixel.r, pixel.g, pixel.b, 255);
+		}
+	}
+
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(&m_renderer, surface);
+	SDL_DestroySurface(surface);
+
+	if (!texture)
+	{
+		throw std::runtime_error(SDL_GetError());
+	}
+
+	SDL_SetTextureScaleMode(texture, SDL_SCALEMODE_NEAREST);
+	blockTextures.emplace(block, texture);
+}
+
+Game::sDisplayResolution Game::displayResoultion(bool& valid) const
 {
 	SDL_Window* window = SDL_GetRenderWindow(&m_renderer);
 	SDL_DisplayID display = SDL_GetDisplayForWindow(window);
 	const SDL_DisplayMode* mode = SDL_GetCurrentDisplayMode(display);
 
 	valid = true;
-	DisplayResolution displayResolution{0U};
+	sDisplayResolution displayResolution{0U};
 	if (mode)
 	{
 		displayResolution.w = mode->w;
@@ -139,7 +180,7 @@ Game::DisplayResolution Game::displayResoultion(bool& valid) const
 	return displayResolution;
 }
 
-Game::WindowSize Game::windowSize() const
+Game::sWindowSize Game::windowSize() const
 {
 	SDL_Window* window = SDL_GetRenderWindow(&m_renderer);
 
@@ -148,6 +189,6 @@ Game::WindowSize Game::windowSize() const
 
 	SDL_GetWindowSize(window, &w, &h);
 
-	return WindowSize{w, h};
+	return sWindowSize{w, h};
 }
 }

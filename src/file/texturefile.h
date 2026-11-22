@@ -12,7 +12,14 @@ namespace file
 class TextureFile : public texture::TextureFile
 {
 public:
-	const std::vector<std::vector<uint8_t>>& read(const std::string) const override;
+	[[nodiscard]] const std::vector<std::vector<common::sRgb>> read(const std::string&) const override;
+
+private:
+	static constexpr char kDelimiter{','};
+	static constexpr char kSpace{' '};
+
+	static void splitChunks(std::vector<common::sRgb>& entries, const std::string& line);
+	static void convertToRgb(std::vector<common::sRgb>& entries, std::string chunk);
 };
 }
 

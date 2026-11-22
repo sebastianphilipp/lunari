@@ -2,61 +2,190 @@
 top to bottom direction
 
 namespace common {
-    enum eView {
-      Game
-      Settings
-    }
+  enum Difficulty {
+    Easy
+    Medium
+    Hard
+  }
+
+  struct Player {
+    std::string name
+    size_t x
+    size_t y
+    bool alive
+  }
 }
 
 namespace app {
   class Manager
 
-  interface IView {
-    + join() : void
-    + signal change(eView)
-    + exit() : void
-    + render() : void
-    + type() const : eView
+  enum Views {
+    InGame
+    Settings
   }
 
-  Manager ..> "*" IView
+  interface View {
+    + join() : void
+    + signal change(Views)
+    + exit() : void
+    + render() : void
+    + type() : Views
+  }
+
+  Views --+ View
+  Manager ..> "*" View
 }
 
 namespace gui {
+  class Game
+  class MenuGameSettings
+  class MenuGeneralSettings
   class Main
-  class Menu
 
-  interface IKeyEvent {
-    + event() : SDL_KeyCode
+  interface GameSettings {
+    + setDifficulty(common::Difficulty) : void
   }
 
-  interface IMenuLogic {
-    + label(int) const : std::string
-    + value(int) const : std::string
-    + settingsCount() const : int
-    + handleKey(int, keycode) : void
-    + signal change(eView)
+  interface GeneralSettings {
+    + setFps(size_t) : void
   }
 
-  Menu ..|> app.IView
-  Main ..|> app.IView
-  Main ..> IKeyEvent
-  Menu ..> IMenuLogic
-  Menu ..> IKeyEvent
+  interface KeyEvent {
+    + signal key(code)
+  }
+
+  interface GameController {
+    + processKey(code)
+  }
+
+  interface TextureHandler {
+    + mapObject(common::MapObject) const
+  }
+
+  interface PlayerState {
+    + players() : array<common::Player>[]
+  }
+
+  interface MapState {
+    + map() : std::string
+  }
+
+  Game ..|> app.View
+  Game ..> KeyEvent
+  Main ..> KeyEvent
+  MenuGameSettings ..> KeyEvent
+  MenuGameSettings ..> GameSettings
+  Main ..|> app.View
+  MenuGameSettings ..|> app.View
+  MenuGeneralSettings ..|> app.View
+  MenuGeneralSettings ..> KeyEvent
+  MenuGeneralSettings ..> GeneralSettings
+  Game ..> GameController
+  Game ..> PlayerState
+  Game ..> MapState
+  Game ..> TextureHandler
 }
 
-namespace menu {
-    class General
-    class Player
+namespace texture {
+    class TextureHandler
 
-    General ..|> gui.IMenuLogic
-    Player ..|> gui.IMenuLogic
+    interface TextureFile {
+        + read(std::string) : std::vector<std::vector<uint8_t>>
+    }
+
+    TextureHandler ..> TextureFile
+    TextureHandler ..|> gui.TextureHandler
+}
+
+namespace controller {
+    class GameController
+
+    interface MovementLogic {
+        + move(key)
+    }
+
+    interface InteractionLogic {
+        + interact(x, y)
+    }
+
+    interface CombatLogic {
+        + hit(Player)
+    }
+
+    interface WorldState {
+        + map() : array<Element>[][]
+    }
+
+    interface PlayerState {
+        + players() : array<Player>[]
+    }
+
+    GameController ..|> gui.GameController
+    GameController ..> MovementLogic
+    GameController ..> CombatLogic
+    GameController ..> InteractionLogic
+    GameController ..> WorldState
+    GameController ..> PlayerState
+}
+
+namespace logic {
+    class Interaction
+    class Movement
+    class Combat
+
+        interface WorldState {
+            + map() : array<Element>[][]
+        }
+
+        interface PlayerState {
+           + players() : array<common::Player>[]
+        }
+
+    Interaction ..|> controller.InteractionLogic
+    Movement ..|> controller.MovementLogic
+    Combat ..|> controller.CombatLogic
+    Interaction ..> WorldState
+    Movement ..> PlayerState
+    Movement ..> WorldState
+}
+
+namespace state {
+    class PlayerState
+    class WorldState
+
+    PlayerState ..|> logic.PlayerState
+    PlayerState ..|> controller.PlayerState
+    WorldState ..|> logic.WorldState
+    WorldState ..|> controller.WorldState
+}
+
+namespace settings {
+    class GameSettings
+    class GeneralSettings
+
+    interface SettingsFile {
+        + read(std::string) : std::string
+        + write(std::string, std::string) : void
+    }
+
+    GameSettings ..|> gui.GameSettings
+    GeneralSettings ..|> gui.GeneralSettings
+    GameSettings ..> SettingsFile
+    GeneralSettings ..> SettingsFile
+}
+
+namespace ini {
+    class SettingsFile
+    class TextureFile
+
+    SettingsFile ..|> settings.SettingsFile
+    TextureFile ..|> texture.TextureFile
 }
 
 namespace event {
     class KeyEvent
 
-    KeyEvent ..|> gui.IKeyEvent
+    KeyEvent ..|> gui.KeyEvent
 }
 
 @enduml

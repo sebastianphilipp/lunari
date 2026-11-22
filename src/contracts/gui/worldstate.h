@@ -9,7 +9,7 @@
 
 #include <vector>
 
-using WorldMap = std::vector<std::vector<common::eMapObject>>;
+using WorldMap = std::vector<std::vector<common::eBlock>>;
 
 namespace gui
 {

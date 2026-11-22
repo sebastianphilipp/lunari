@@ -9,7 +9,7 @@
 
 namespace common
 {
-struct Player
+struct sPlayer
 {
 	std::string name;
 	size_t posX;

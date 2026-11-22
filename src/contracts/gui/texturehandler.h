@@ -6,15 +6,16 @@
 #define SRC_CONTRACTS_GUI_TEXTUREHANDLER_H
 
 #include <common/map.h>
+#include <common/rgb.h>
 
-#include <array>
+#include <vector>
 
 namespace gui
 {
 class TextureHandler
 {
 public:
-	[[nodiscard]] virtual const std::array<std::array<uint8_t, common::kBlockTextureWidth>, common::kBlockTextureHeight>& mapObject(const common::eMapObject) const = 0;
+	[[nodiscard]] virtual const std::vector<std::vector<sRgb>> block(const common::eBlock) const = 0;
 };
 }
 

@@ -6,8 +6,12 @@
 
 namespace texture
 {
-const std::array<std::array<uint8_t, common::kBlockTextureWidth>, common::kBlockTextureHeight>& TextureHandler::mapObject(const common::eMapObject) const
+TextureHandler::TextureHandler(texture::TextureFile& textureFile)
+		: m_textureFile{textureFile}
+{}
+
+const std::vector<std::vector<common::sRgb>> TextureHandler::block(const common::eBlock block) const
 {
-	
+	return m_textureFile.read(blockTextures.at(block));
 }
 }
